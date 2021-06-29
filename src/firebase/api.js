@@ -1,3 +1,5 @@
 import { firebase } from './init';
 
-export default api = {};
+let api = {};
+
+export default api;
