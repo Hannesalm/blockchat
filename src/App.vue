@@ -20,17 +20,27 @@
           <span aria-hidden="true"></span>
         </a>
       </div>
+      <button @click="get">Get</button>
     </nav>
     <!-- Message container -->
-    <div class="container is-fluid"></div>
+    <div class="container is-fluid">
+      <div v-for="message in messages" :key="message.id">
+        {{ message.message }}
+      </div>
+    </div>
 
     <div class="container is-fluid send">
       <div class="field is-grouped">
         <p class="control is-expanded">
-          <input class="input" type="text" placeholder="Write message..." />
+          <input
+            v-model="message"
+            class="input"
+            type="text"
+            placeholder="Write message..."
+          />
         </p>
         <p class="control">
-          <a class="button">
+          <a class="button" @click="add">
             Send
           </a>
         </p>
@@ -45,15 +55,27 @@ import api from './firebase/api';
 export default {
   data() {
     return {
-      message: true,
-      message: 'Blockchat',
-      currentRoom: '',
+      message: '',
+      messages: [],
+      currentRoom: 'Test',
     };
+  },
+
+  mounted() {
+    this.get();
   },
 
   methods: {
     add() {
-      api.insertData(this.currentRoom);
+      api
+        .insertData(this.currentRoom, this.message)
+        .then((res) => console.log(res));
+    },
+
+    get() {
+      api.getMessages(this.currentRoom).on('value', (snapshot) => {
+        this.messages = snapshot.val();
+      });
     },
   },
 };
