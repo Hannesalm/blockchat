@@ -4,11 +4,9 @@ let api = {
   insertData(room, message) {
     let messagesRef = db.ref(room);
     let newMessageRef = messagesRef.push();
-    console.log(newMessageRef.key);
-    return newMessageRef.set({
-      message: message,
-      id: newMessageRef.key,
-    });
+
+    message.id = newMessageRef.key;
+    return newMessageRef.set(message);
   },
 
   getMessages(room) {
